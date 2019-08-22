@@ -17,8 +17,8 @@ typedef enum _return_type
     OK,
 }return_type;
 
-#define Matrix float*  // define Matrix
 #define MATRIX_MAX_NUM 100
+#define Matrix float*  // define Matrix
 typedef enum _return_Matrix_type
 {
     INVAILD,

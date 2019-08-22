@@ -75,8 +75,9 @@ Matrix rem(Matrix x1, float x2, int count)
     printf("count = %d\n", count);
 #endif
 
-    unsigned short i;
-    Matrix result;
+    int i;
+    float temp[count];
+    Matrix result = temp;
 
     if(count > MATRIX_MAX_NUM)
     {
@@ -85,12 +86,11 @@ Matrix rem(Matrix x1, float x2, int count)
     }
     for(i = 0; i < count; i++)
     {
+        result[i] = (float )fmod(x1[i], x2);
 #ifdef DEBUG
-        printf("fmod(x1[i], x2) = %f\n", fmod(x1[i], x2));
+        printf("fmod(%f, %f) = %f\n", x1[i], x2, *(result + i));
 #endif
-        result[i] = fmod(x1[i], x2);
     }
-
     return result;
 }
 #endif
@@ -107,10 +107,9 @@ int main()
     float a[] = {1,2,3,4,5,6,7};
     float b[] = {1.4,2.5,3.6,4.7,9.0,12.6};
     Matrix result;
-    unsigned short i;
+    int i;
     int len;
     len = sizeof(a)/sizeof(float);
-    printf("len =%d\n", len);
     result = rem(a, 3, len);
     for(i = 0; i < len; i++)
     {
