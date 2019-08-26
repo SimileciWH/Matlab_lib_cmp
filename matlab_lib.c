@@ -68,16 +68,15 @@ int M_rand(int count, ...)
 #endif
 
 #ifdef REM_EN
-Matrix rem(Matrix x1, float x2, int count)
+List_F *rem(List_F *x1, List_F x2, List_I count)
 {
 #ifdef DEBUG
 	printf("rem\n");
     printf("count = %d\n", count);
 #endif
 
-    int i;
-    float temp[count];
-    Matrix result = temp;
+    List_I i;
+    List_F *result = x1;
 
     if(count > MATRIX_MAX_NUM)
     {
@@ -95,6 +94,10 @@ Matrix rem(Matrix x1, float x2, int count)
 }
 #endif
 
+#ifdef LENGTH_EN
+#define length(a,size)   (sizeof(a) / size)
+#endif
+
 #ifdef FUNC_TEST
 int main()
 {
@@ -104,18 +107,18 @@ int main()
     M_rand(3,4,5,6);
 #endif
 #ifdef REM_TEST
-    float a[] = {1,2,3,4,5,6,7};
-    float b[] = {1.4,2.5,3.6,4.7,9.0,12.6};
-    Matrix result;
-    int i;
-    int len;
-    len = sizeof(a)/sizeof(float);
+    List_F a[] = {1,2,3,4,5,6,7};
+    List_F b[] = {1.4,2.5,3.6,4.7,9.0,12.6};
+    List_F *result;
+    List_I i;
+    List_I len;
+    len = length(a, FLOAT_SIZE);
     result = rem(a, 3, len);
     for(i = 0; i < len; i++)
     {
         printf("result [int] %f\n", result[i]);
     }
-    len = sizeof(b)/sizeof(float);
+    len = length(b, INT_SIZE);
     result = rem(b, 4.2, len);
     for(i = 0; i < len; i++)
     {
