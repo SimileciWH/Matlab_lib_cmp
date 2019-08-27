@@ -98,6 +98,45 @@ List_F *rem(List_F *x1, List_F x2, List_I count)
 #define length(a,size)   (sizeof(a) / size)
 #endif
 
+#ifdef IND2SUB_EN
+IND2SUB ind2sub(IND2SUB_BASE colAndRow, U32 x2[], U16 count)
+{
+    U8 i;
+    U32 temp_row, temp_col, max_matrix;
+    IND2SUB result;
+
+    max_matrix = colAndRow.bit.col * colAndRow.bit.row;
+    if(count > COL_ROW_MAX_NUM)
+    {
+        printf("[Fatal err] count > MAX(%d)\n", COL_ROW_MAX_NUM);
+        result.ind2sub[0].colAndRow = ERR;
+        return result;
+    }
+    for(i = 0; i < count; i++)
+    {
+        if(x2[i] > max_matrix)
+        {
+            printf("[err] [%d] is over row_col = %d_%d\n", x2[i], colAndRow.bit.row, colAndRow.bit.col);
+            result.ind2sub[0].colAndRow = ERR;
+            return result;
+        }
+        temp_row = x2[i] % colAndRow.bit.row;
+        temp_col = x2[i] / colAndRow.bit.row;
+        if(temp_row == 0)
+        {
+            result.ind2sub[i].bit.row = colAndRow.bit.row;
+            result.ind2sub[i].bit.col = temp_col;
+        }
+        else
+        {
+            result.ind2sub[i].bit.row = temp_row;
+            result.ind2sub[i].bit.col = temp_col + 1;
+        }
+    }
+    return result;
+}
+#endif
+
 #ifdef FUNC_TEST
 int main()
 {
@@ -123,6 +162,28 @@ int main()
     for(i = 0; i < len; i++)
     {
         printf("result [float] %0.2f\n", result[i]);
+    }
+#endif
+#ifdef IND2SUB_TEST
+    IND2SUB result;
+    IND2SUB_BASE aa;
+    aa.bit.col = 3;
+    aa.bit.row = 3;
+    U16 count, i;
+    U32 bb[] = {3,4,5,6};
+
+    count = length(bb, INT_SIZE);
+    result = ind2sub(aa, bb, count);
+    if(result.ind2sub[0].colAndRow == ERR)
+    {
+        printf("[ERR]\n");
+    }
+    else
+    {
+        for(i = 0; i < count; i++)
+        {
+            printf("[%d] = (%d,%d)\n", bb[i], result.ind2sub[i].bit.row, result.ind2sub[i].bit.col);
+        }
     }
 #endif
     return 0;
