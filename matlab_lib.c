@@ -137,6 +137,37 @@ IND2SUB ind2sub(IND2SUB_BASE colAndRow, U32 x2[], U16 count)
 }
 #endif
 
+#ifdef NUM2STR_EN
+NUM2STR num2str(List_F *num, U8 numOfDigits, U16 count)
+{   
+    NUM2STR result;
+    U16 i;
+
+    if(numOfDigits > MAX_NUM_DIGIT || count > MAX_NUM_COUNT)
+    {
+        if(numOfDigits > MAX_NUM_DIGIT)
+            printf("[Fatal ERR] numOfDigits(%d) > MAX_DIGITS(%d)\n",
+                   numOfDigits, MAX_NUM_DIGIT);
+        else
+            printf("[Fatal ERR] count(%d) > MAX_COUNT(%d)\n",
+                   count, MAX_NUM_COUNT);
+        result.num2str[0][0] = ERR;
+        return result;
+    }
+    for(i = 0; i < count; i++)
+    {
+        
+        gcvt(num[i], numOfDigits, result.num2str[i]);
+#ifdef DEBUG
+        printf("Original number; %f\n" , num[i]);
+        printf ("Converted string; %s\n",result.num2str[i]);
+#endif
+    }
+    return result;
+}
+#endif
+
+
 #ifdef FUNC_TEST
 int main()
 {
@@ -183,6 +214,25 @@ int main()
         for(i = 0; i < count; i++)
         {
             printf("[%d] = (%d,%d)\n", bb[i], result.ind2sub[i].bit.row, result.ind2sub[i].bit.col);
+        }
+    }
+#endif
+#ifdef NUM2STR_TEST
+    float num[] = {12.345, 34.123, 56.99999, 1234.45678, 200};
+    U16 len = length(num, FLOAT_SIZE), i;
+    NUM2STR result;
+    U8 numOfDigits = 5;
+
+    result = num2str(num, numOfDigits, len);
+    if(result.num2str[0][0] == ERR)
+    {
+        printf("[ERR]\n");
+    }
+    else
+    {
+        for(i = 0; i < len; i++)
+        {
+            printf("origin num(%%f) = %f, convert (%%s) = %s\n", num[i], result.num2str[i]);
         }
     }
 #endif

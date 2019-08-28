@@ -8,12 +8,14 @@
 //#define REM_TEST
 //#define RAND_TEST
 //#define LENGTH_TEST
-#define IND2SUB_TEST
+//#define IND2SUB_TEST
+//#define NUM2STR_TEST
 
 #define RAND_EN
 #define REM_EN
 #define LENGTH_EN
 #define IND2SUB_EN
+#define NUM2STR_EN
 
 typedef unsigned char       U8;
 typedef unsigned short      U16;
@@ -55,5 +57,15 @@ typedef struct _IND2SUB
     IND2SUB_BASE ind2sub[COL_ROW_MAX_NUM];
 }IND2SUB;
 #endif
+
+#ifdef NUM2STR_EN
+#define MAX_NUM_DIGIT 10
+#define MAX_NUM_COUNT 200
+typedef struct _NUM2STR
+{
+    char num2str[MAX_NUM_COUNT][MAX_NUM_DIGIT];
+}NUM2STR;
+#endif
+
 
 #endif
