@@ -10,17 +10,21 @@
 //#define LENGTH_TEST
 //#define IND2SUB_TEST
 //#define NUM2STR_TEST
+#define ZERO_TEST
 
 #define RAND_EN
 #define REM_EN
 #define LENGTH_EN
 #define IND2SUB_EN
 #define NUM2STR_EN
+#define ZERO_EN
 
 typedef unsigned char       U8;
 typedef unsigned short      U16;
 typedef unsigned long       U32;
 typedef unsigned long long  U64;
+
+#define M_PI PI;
 
 typedef enum _return_type
 {
@@ -67,5 +71,13 @@ typedef struct _NUM2STR
 }NUM2STR;
 #endif
 
+#ifdef ZERO_EN
+#define MAX_NUM_COL 200
+#define MAX_NUM_ROW 200
+typedef struct _ZEROS
+{
+    U8 zeros[MAX_NUM_ROW][MAX_NUM_COL];
+}ZEROS;
+#endif
 
 #endif

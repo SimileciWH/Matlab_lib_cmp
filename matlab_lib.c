@@ -167,6 +167,102 @@ NUM2STR num2str(List_F *num, U8 numOfDigits, U16 count)
 }
 #endif
 
+#ifdef ZERO_EN
+ZEROS zeros0()
+{
+    ZEROS result;
+    result.zeros[0][0] = 0;
+    return result;
+}
+
+ZEROS zeros1(List_I n)
+{
+    U16 i, j;
+    ZEROS result;
+
+    if(n >= MAX_NUM_ROW || n >= MAX_NUM_COL)
+    {
+        printf("[Fatal][ERR] n is beyond! [%d,%d]\n", MAX_NUM_ROW, MAX_NUM_COL);
+        result.zeros[0][0] = ERR;
+        return result;
+    }
+    for(i = 0; i < n; i++)
+    {
+        for(j = 0; j < n; j++)
+        {
+            result.zeros[i][j] = 0;
+        }
+    }
+    return result;
+}
+ZEROS zeros2(List_I row, List_I col)
+{
+    U16 i, j;
+    ZEROS result;
+
+    if(row >= MAX_NUM_ROW || col >= MAX_NUM_COL)
+    {
+        printf("[Fatal][ERR] n is beyond! [%d,%d]\n", MAX_NUM_ROW, MAX_NUM_COL);
+        result.zeros[0][0] = ERR;
+        return result;
+    }
+    for(i = 0; i < row; i++)
+    {
+        for(j = 0; j < col; j++)
+        {
+            result.zeros[i][j] = 0;
+        }
+    }
+    return result;
+
+}
+ZEROS zeros(int count, ...)
+{
+    ZEROS result;
+    va_list v;
+    va_start(v, count);
+
+    switch(count)
+    {
+        case 0:
+        {
+            result = zeros0();
+            break;
+        }
+        case 1:
+        {
+            int x1 = va_arg(v, int);
+            va_end(v);
+            result = zeros1(x1);
+            break;
+        }
+        case 2:
+        {
+            int x1 = va_arg(v, int);
+            int x2 = va_arg(v, int);
+            va_end(v);
+            result = zeros2(x1, x2);
+            break;
+        }
+        case 3:
+        {
+#if 0
+            int x1 = va_arg(v, int);
+            int x2 = va_arg(v, int);
+            int x3 = va_arg(v, int);
+            va_end(v);
+            func2(x1, x2, x3);
+#endif
+            break;
+        }
+        case 4:
+        default:
+            break;
+    }
+    return result;
+}
+
+#endif
 
 #ifdef FUNC_TEST
 int main()
@@ -234,6 +330,31 @@ int main()
         {
             printf("origin num(%%f) = %f, convert (%%s) = %s\n", num[i], result.num2str[i]);
         }
+    }
+#endif
+#ifdef ZERO_TEST
+    ZEROS result;
+    U8 i, j, row = 10, col = 15, n = 10;
+
+    result = zeros(0);
+    printf("zeros(0) = %d\n", result.zeros[0][0]);
+    result = zeros(2, row, col);
+    for(i = 0; i < row; i++)
+    {
+        for(j = 0; j < col; j++)
+        {
+            printf("%d\t", result.zeros[i][j]);
+        }
+        printf("\n");
+    }
+    result = zeros(1, n);
+    for(i = 0; i < n; i++)
+    {
+        for(j = 0; j < n; j++)
+        {
+            printf("%d\t", result.zeros[i][j]);
+        }
+        printf("\n");
     }
 #endif
     return 0;
