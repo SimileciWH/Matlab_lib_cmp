@@ -10,7 +10,8 @@
 //#define LENGTH_TEST
 //#define IND2SUB_TEST
 //#define NUM2STR_TEST
-#define ZERO_TEST
+//#define ZERO_TEST
+//#define SETDIFF_TEST
 
 #define RAND_EN
 #define REM_EN
@@ -18,16 +19,24 @@
 #define IND2SUB_EN
 #define NUM2STR_EN
 #define ZERO_EN
+#define SETDIFF_EN
 
 typedef unsigned char       U8;
 typedef unsigned short      U16;
 typedef unsigned long       U32;
 typedef unsigned long long  U64;
+typedef char       S8;
+typedef short      S16;
+typedef long       S32;
+typedef long long  S64;
+typedef float      F32;
 
 #define M_PI PI;
 
 typedef enum _return_type
 {
+    FALSE,
+    TRUE,
     ERR,
     OK,
 }return_type;
@@ -78,6 +87,23 @@ typedef struct _ZEROS
 {
     U8 zeros[MAX_NUM_ROW][MAX_NUM_COL];
 }ZEROS;
+#endif
+
+#ifdef SETDIFF_EN
+typedef union _SETDIFF
+{
+    struct
+        {
+        F32 num;
+        U32 index: 16;
+        U32 count: 16;
+        }bits;
+     S32 setdiffType;
+}SETDIFF;
+typedef struct
+{
+    SETDIFF setdiff[MAX_NUM_COUNT];
+}SETDIFFTYPE;
 #endif
 
 #endif

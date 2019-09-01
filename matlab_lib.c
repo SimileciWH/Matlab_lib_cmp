@@ -264,6 +264,92 @@ ZEROS zeros(int count, ...)
 
 #endif
 
+#ifdef SETDIFF_EN
+SETDIFFTYPE setdiff(List_F *A, U16 count_A, List_F *B, U16 count_B /*, U16 type*/)
+{
+    SETDIFFTYPE result;
+    U16 i, j, count = 0, skipFlag = FALSE;
+
+    if(MAX_NUM_COUNT < ((count_A >= count_B)?count_A: count_B))
+    {
+        printf("[Fatal ERR] Matrix A or B length is beyond MAX(%d)\n", MAX_NUM_COUNT);
+        result.setdiff[0].setdiffType = ERR;
+        return result;
+    }
+    for(i = 0; i < count_A; i++)
+    {
+#ifdef DEBUG
+        printf("A[%d] = %f\n", i, A[i]);
+#endif
+        //remove same number in result
+        if(count != 0)
+        {
+            for(j = 0; j < count; j++)
+            {
+                if(result.setdiff[j].bits.num == A[i])
+                {
+#ifdef DEBUG
+                    printf("A[%d] = %f, sizeof(float) = %d\n", i, A[i], sizeof(float));
+                    printf("result[%d] = %f\n", j, result.setdiff[j].bits.num);
+#endif
+                    skipFlag = TRUE;
+                    break;
+                }
+            }
+            if( skipFlag == TRUE)
+            {
+                skipFlag = FALSE;
+                continue;
+            }
+        }
+        //find same number in B
+        for(j = 0; j < count_B; j++)
+        {
+            if(A[i] == B[j])
+            {printf("A[%d] = %f, B[%d] = %f\n", i, A[i], j, B[j]);
+                break;
+            }
+        }
+        if(j == count_B)
+        {
+#ifdef DEBUG
+            printf("[2] A[%d] = %f\n", i, A[i]);
+#endif
+            result.setdiff[count].bits.num = A[i];
+            result.setdiff[count].bits.index = i;
+            count++;
+        }
+    }
+    if(i == count_A)
+    {
+        if(count == 0)
+        {
+            result.setdiff[count].bits.count = 0;
+        }
+        else
+        {
+            for(i = 0; i < count; i++)
+            {
+                result.setdiff[i].bits.count = count;
+#if 0
+                if(type == INT_SIZE)
+                {
+                    result.setdiff[i].bits.num = (int)(result.setdiff[i].bits.num);
+                }
+                else if(type == FLOAT_SIZE)
+                {
+                    result.setdiff[i].bits.num = (float)(result.setdiff[i].bits.num);
+                }
+#endif
+            }
+        }
+        return result;
+    }
+
+}
+
+#endif
+
 #ifdef FUNC_TEST
 int main()
 {
@@ -356,6 +442,34 @@ int main()
         }
         printf("\n");
     }
+#endif
+#ifdef SETDIFF_TEST
+    List_F a[] = {-1.4, -2.5, -3.2, 4.6, 5, 6, 1.7, 1, -2, 2, -3};
+    List_F b[] = {-2.5, 6.3, 5.2, 10.1, 0.5, 9.2};
+    U16 count_A = length(a, INT_SIZE);
+    U16 count_B = length(b, INT_SIZE), count;
+    SETDIFFTYPE result;
+    U16 i;
+
+    result = setdiff(a, count_A, b, count_B);
+    if(result.setdiff[0].setdiffType == ERR)
+    {
+        printf("[ERR]\n");
+    }
+    count = result.setdiff[0].bits.count;
+    printf("count = %d\n", count);
+    if(count == 0)
+    {
+        printf("All number in A is also in B\n");
+    }
+    else
+    {
+        for(i = 0; i < count; i++)
+        {
+            printf("%f_%d\t", result.setdiff[i].bits.num, result.setdiff[i].bits.index);
+        }
+    }
+
 #endif
     return 0;
 }
