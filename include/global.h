@@ -6,7 +6,7 @@
 #define FUNC_TEST
 #define DEBUG
 //#define REM_TEST
-//#define RAND_TEST
+#define RAND_TEST
 //#define LENGTH_TEST
 //#define IND2SUB_TEST
 //#define NUM2STR_TEST
@@ -52,6 +52,16 @@ typedef enum _return_Matrix_type
 
 #define INT_SIZE sizeof(int)
 #define FLOAT_SIZE sizeof(float)
+#define MAX_NUM_COL 200
+#define MAX_NUM_ROW 200
+
+
+#ifdef RAND_EN
+typedef struct _RAND
+{
+    float randArry[MAX_NUM_ROW][MAX_NUM_COL];
+}RAND;
+#endif
 
 #ifdef IND2SUB_EN
 #define COL_ROW_MAX_NUM 200
@@ -81,8 +91,6 @@ typedef struct _NUM2STR
 #endif
 
 #ifdef ZERO_EN
-#define MAX_NUM_COL 200
-#define MAX_NUM_ROW 200
 typedef struct _ZEROS
 {
     U8 zeros[MAX_NUM_ROW][MAX_NUM_COL];

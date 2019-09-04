@@ -4,52 +4,92 @@
 #include "matlab_lib.h"
 
 #ifdef RAND_EN
-int rand0()
+RAND rand0()
 {
 #ifdef DEBUG
-	printf("rand0\n");
+	printf("rand0 in (0,1)\n");
 #endif
+    RAND result;
+    result.randArry[0][0] = ((float)(rand()%10000)) / 10000;
+    return result;
 }
-int rand1(int a)
+RAND rand1(int a)
 {
 #ifdef DEBUG
 	printf("rand1\n");
 #endif
+    RAND result;
+    U16 i, j;
+
+    if(a > MAX_NUM_ROW)
+    {
+        printf("[Fatal ERR] %d > MAX_NUM(%d)\n", a, MAX_NUM_ROW);
+        result.randArry[0][0] = ERR;
+        return result;
+    }
+    for(i = 0; i < a; i++)
+    {
+        for(j = 0; j < a; j++)
+        {
+            result.randArry[i][j] = ((float)(rand()%10000)) / 10000;
+        }
+    }
+    return result;
 }
-int rand2(int a, int b)
+RAND rand2(int a, int b)
 {
 #ifdef DEBUG
 	printf("rand2\n");
 #endif
+    RAND result;
+    U16 i, j;
+
+    if(a > MAX_NUM_ROW || b > MAX_NUM_COL)
+    {
+        printf("[Fatal ERR] %d_%d > MAX_NUM(%d_%d)\n", a, b, MAX_NUM_ROW, MAX_NUM_COL);
+        result.randArry[0][0] = ERR;
+        return result;
+    }
+    for(i = 0; i < a; i++)
+    {
+        for(j = 0; j < b; j++)
+        {
+            result.randArry[i][j] = ((float)(rand()%10000)) / 10000;
+        }
+    }
+    return result;
 }
 
-int M_rand(int count, ...)
+RAND M_rand(int count, ...)
 {
-	va_list v;
-	va_start(v, count);
+    va_list v;
+    va_start(v, count);
+    RAND result;
+
 	switch(count)
 	{
-		case 0:
-		{
-			
-		}
-		case 1:
-		{
-			int x1 = va_arg(v, int);
-			va_end(v);
-			rand1(x1);
-			break;
-		}
-		case 2:
-		{
-			int x1 = va_arg(v, int);
-			int x2 = va_arg(v, int);
-			va_end(v);
-			rand2(x1, x2);
-			break;
-		}
-		case 3:
-		{
+        case 0:
+        {
+            result = rand0();
+            break;
+        }
+        case 1:
+        {
+            int x1 = va_arg(v, int);
+            va_end(v);
+            result = rand1(x1);
+            break;
+        }
+        case 2:
+        {
+            int x1 = va_arg(v, int);
+            int x2 = va_arg(v, int);
+            va_end(v);
+            result = rand2(x1, x2);
+            break;
+        }
+        case 3:
+        {
 #if 0
 			int x1 = va_arg(v, int);
 			int x2 = va_arg(v, int);
@@ -63,7 +103,7 @@ int M_rand(int count, ...)
 		default:
 			break;
 	}
-	return OK;
+	return result;
 }
 #endif
 
@@ -354,9 +394,50 @@ SETDIFFTYPE setdiff(List_F *A, U16 count_A, List_F *B, U16 count_B /*, U16 type*
 int main()
 {
 #ifdef RAND_TEST
-    M_rand(1,1);
-    M_rand(2,2,3);
-    M_rand(3,4,5,6);
+    RAND result;
+    U16 i, j, row = 10, col =1, n = 5;
+    result = M_rand(0);
+    if(result.randArry[0][0] != ERR)
+    {
+        printf("rand in (0,1) = %f\n", result.randArry[0][0]);
+    }
+    else
+    {
+        printf("ERR\n");
+    }
+    result = M_rand(1,n);
+    if(result.randArry[0][0] != ERR)
+    {
+        for(i = 0; i < n; i++)
+        {
+            for(j = 0; j < n; j++)
+            {
+                printf("%f\t", result.randArry[i][j]);
+            }
+            printf("\n");
+        }
+    }
+    else
+        {
+        printf("ERR\n");
+    }
+    result = M_rand(2, row, col);
+    if(result.randArry[0][0] != ERR)
+    {
+        for(i = 0; i < row; i++)
+        {
+            for(j = 0; j < col; j++)
+            {
+                printf("%f\t", result.randArry[i][j]);
+            }
+            printf("\n");
+        }
+    }
+    else
+        {
+        printf("ERR\n");
+    }
+
 #endif
 #ifdef REM_TEST
     List_F a[] = {1,2,3,4,5,6,7};
